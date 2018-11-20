@@ -33,10 +33,6 @@ public class FrameTest {
         secondThrow.setKnockedPins(3);
         tries.add(secondThrow);
 
-        Try thirdThrow = new Try();
-        thirdThrow.setKnockedPins(8);
-        tries.add(thirdThrow);
-
         return tries;
     }
 
@@ -58,14 +54,6 @@ public class FrameTest {
         Try firstThrow = new Try();
         firstThrow.setKnockedPins(10);
         tries.add(firstThrow);
-
-        Try secondThrow = new Try();
-        secondThrow.setKnockedPins(4);
-        tries.add(secondThrow);
-
-        Try thirdThrow = new Try();
-        thirdThrow.setKnockedPins(3);
-        tries.add(thirdThrow);
 
         return tries;
     }
@@ -109,48 +97,27 @@ public class FrameTest {
     }
 
     @Test
-    public void testCalcScoreForCompletedOpenFrame() {
-        // Test completed frame
-        classUnderTest.setTries(setupOpenFrame());
-        classUnderTest.setComplete(true);
-        classUnderTest.setType(Frame.Type.OPEN_FRAME);
-        classUnderTest.calcScore();
-        assertEquals(8, classUnderTest.getScore());
-    }
-
-    @Test
-    public void testCalcScoreForCompletedSpareFrame() {
-        // Test completed frame
+    public void testSetTypeForLastSpareFrame() {
         classUnderTest.setTries(setupSpareFrame());
-        classUnderTest.setComplete(true);
-        classUnderTest.setType(Frame.Type.SPARE);
-        classUnderTest.calcScore();
-        assertEquals(18, classUnderTest.getScore());
+        classUnderTest.setNumber(10);
+        classUnderTest.determineType();
+        assertEquals(Frame.Type.LAST_THROW_SPARE, classUnderTest.getType());
     }
 
     @Test
-    public void testCalcScoreForCompletedStrikeFrame() {
-        // Test completed frame
+    public void testSetTypeForLastStrikeFrame() {
         classUnderTest.setTries(setupStrikeFrame());
-        classUnderTest.setComplete(true);
-        classUnderTest.setType(Frame.Type.STRIKE);
-        classUnderTest.calcScore();
-        assertEquals(17, classUnderTest.getScore());
-    }
+        classUnderTest.setNumber(10);
+        classUnderTest.determineType();
+        assertEquals(Frame.Type.LAST_THROW_STRIKE, classUnderTest.getType());
 
-    @Test
-    public void testCalcScoreForInCompleteOpenFrame() {
-        // Test completed frame
-        classUnderTest.setTries(setupIncompleteFrame());
-        classUnderTest.calcScore();
-        assertEquals(7, classUnderTest.getScore());
     }
 
     @Test
     public void testCheckCompletionForInCompleteOpenFrame() {
         // Test completed frame
         classUnderTest.setTries(setupIncompleteFrame());
-        classUnderTest.checkCompletion();
+        classUnderTest.checkFrameCompletion();
         assertFalse(classUnderTest.isComplete());
     }
 
@@ -159,7 +126,7 @@ public class FrameTest {
         // Test completed frame
         classUnderTest.setTries(setupOpenFrame());
         classUnderTest.setType(Frame.Type.OPEN_FRAME);
-        classUnderTest.checkCompletion();
+        classUnderTest.checkFrameCompletion();
         assertTrue(classUnderTest.isComplete());
     }
 
@@ -168,7 +135,7 @@ public class FrameTest {
         // Test completed frame
         classUnderTest.setTries(setupStrikeFrame());
         classUnderTest.setType(Frame.Type.STRIKE);
-        classUnderTest.checkCompletion();
+        classUnderTest.checkFrameCompletion();
         assertTrue(classUnderTest.isComplete());
     }
 
@@ -177,7 +144,45 @@ public class FrameTest {
         // Test completed frame
         classUnderTest.setTries(setupSpareFrame());
         classUnderTest.setType(Frame.Type.SPARE);
-        classUnderTest.checkCompletion();
+        classUnderTest.checkFrameCompletion();
+        assertTrue(classUnderTest.isComplete());
+    }
+
+    @Test
+    public void testCheckCompletionForCompletedLastStrikeFrame() {
+        // Test completed frame
+        List<Try> tries = setupStrikeFrame();
+        Try second = new Try();
+        second.setKnockedPins(3);
+        tries.add(second);
+
+        Try third = new Try();
+        third.setKnockedPins(3);
+        tries.add(third);
+
+        classUnderTest.setTries(tries);
+        classUnderTest.setType(Frame.Type.LAST_THROW_STRIKE);
+        classUnderTest.setNumber(10);
+        classUnderTest.checkFrameCompletion();
+        assertTrue(classUnderTest.isComplete());
+    }
+
+    @Test
+    public void testCheckCompletionForCompletedLastSpareFrame() {
+        // Test completed frame
+        List<Try> tries = setupStrikeFrame();
+        Try second = new Try();
+        second.setKnockedPins(3);
+        tries.add(second);
+
+        Try third = new Try();
+        third.setKnockedPins(3);
+        tries.add(third);
+
+        classUnderTest.setTries(tries);
+        classUnderTest.setType(Frame.Type.LAST_THROW_SPARE);
+        classUnderTest.setNumber(10);
+        classUnderTest.checkFrameCompletion();
         assertTrue(classUnderTest.isComplete());
     }
 }

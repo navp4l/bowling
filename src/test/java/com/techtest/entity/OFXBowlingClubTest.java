@@ -1,15 +1,10 @@
 package com.techtest.entity;
 
-import com.techtest.domain.Frame;
-import com.techtest.domain.Try;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class OFXBowlingClubTest {
 
@@ -25,46 +20,6 @@ public class OFXBowlingClubTest {
         classUnderTest = null;
     }
 
-    private List<Frame> setupCompleteFrames(){
-        List<Frame> frames = new ArrayList<>();
-
-        Frame first = new Frame();
-        List<Try> tries = new ArrayList<>();
-        Try firstThrow = new Try();
-        firstThrow.setKnockedPins(7);
-        tries.add(firstThrow);
-
-        Try secondThrow = new Try();
-        secondThrow.setKnockedPins(3);
-        tries.add(secondThrow);
-
-        Try thirdThrow = new Try();
-        thirdThrow.setKnockedPins(8);
-        tries.add(thirdThrow);
-
-        first.setTries(tries);
-        frames.add(first);
-
-        Frame second = new Frame();
-        List<Try> triesTwo = new ArrayList<>();
-        Try one = new Try();
-        one.setKnockedPins(7);
-        triesTwo.add(one);
-
-        Try two = new Try();
-        two.setKnockedPins(3);
-        triesTwo.add(two);
-
-        Try three = new Try();
-        three.setKnockedPins(8);
-        triesTwo.add(three);
-
-        second.setTries(triesTwo);
-        frames.add(second);
-
-        return frames;
-    }
-
     @Test
     public void testFrameCreation() {
         assertEquals(0, classUnderTest.getScoreboard().size());
@@ -74,18 +29,18 @@ public class OFXBowlingClubTest {
 
         classUnderTest.roll(4);
         classUnderTest.roll(3);
-        assertEquals(1, classUnderTest.getScoreboard().size());
+        assertEquals(2, classUnderTest.getScoreboard().size());
 
         classUnderTest.roll(5);
         classUnderTest.roll(1);
-        assertEquals(2, classUnderTest.getScoreboard().size());
+        assertEquals(3, classUnderTest.getScoreboard().size());
 
         classUnderTest.roll(2);
-        assertEquals(3, classUnderTest.getScoreboard().size());
+        assertEquals(4, classUnderTest.getScoreboard().size());
     }
 
     @Test
-    public void testScoreCalc() {
+    public void testScoreCalc1() {
         assertEquals(0, classUnderTest.score());
 
         classUnderTest.roll(10);
@@ -94,16 +49,66 @@ public class OFXBowlingClubTest {
         classUnderTest.roll(10);
         classUnderTest.roll(10);
 
-        assertEquals(30, classUnderTest.score());
-
-        classUnderTest.roll(10);
-
-        assertEquals(40, classUnderTest.score());
-
-        classUnderTest.roll(10);
-        classUnderTest.roll(10);
-
         assertEquals(60, classUnderTest.score());
 
+        classUnderTest.roll(10);
+
+        assertEquals(90, classUnderTest.score());
+
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+
+        assertEquals(150, classUnderTest.score());
+
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+        classUnderTest.roll(10);
+
+        assertEquals(300, classUnderTest.score());
+    }
+
+    @Test
+    public void testScoreCalc2() {
+        classUnderTest.roll(10);
+
+        classUnderTest.roll(7);
+        classUnderTest.roll(3);
+
+        assertEquals(30, classUnderTest.score());
+
+        classUnderTest.roll(7);
+        classUnderTest.roll(2);
+
+        classUnderTest.roll(9);
+        classUnderTest.roll(1);
+
+        classUnderTest.roll(10);
+
+        classUnderTest.roll(10);
+
+        assertEquals(96, classUnderTest.score());
+
+        classUnderTest.roll(10);
+
+        classUnderTest.roll(2);
+        classUnderTest.roll(3);
+
+        assertEquals(138, classUnderTest.score());
+
+        classUnderTest.roll(6);
+        classUnderTest.roll(4);
+
+        classUnderTest.roll(7);
+        classUnderTest.roll(3);
+
+        assertEquals(162, classUnderTest.score());
+
+        // Bonus throw
+        classUnderTest.roll(3);
+
+        assertEquals(168, classUnderTest.score());
     }
 }
